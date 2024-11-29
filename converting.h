@@ -12,6 +12,6 @@ int isLowerRange(const char* character, char lower);
 int isUpperRange(const char* character, char upper);
 
 void convert(char* string);
-void code(enum CodeType codeType, char* string, signed char* key);
+void code(enum CodeType codeType, char* string, const signed char* key);
 
 #endif //CONVERTING_H

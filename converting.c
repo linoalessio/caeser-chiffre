@@ -59,7 +59,7 @@ void convert(char* string) {
 
 }
 
-void code(const enum CodeType codeType, char* string, signed char* key) {
+void code(const enum CodeType codeType, char* string, const signed char* key) {
 
     convert(string);
     if (key < 0) key += 26;
