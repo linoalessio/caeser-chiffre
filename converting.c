@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "converting.h"
 
+#include <ctype.h>
+
 /*
  * MIT License
  *
@@ -26,49 +28,60 @@
  * SOFTWARE.
  */
 
+int isUpperAlphabetical(const char* character) {
+    return (*character >= 'A' && *character <= 'Z') ? 1 : 0;
+}
+
+int isLowerAlphabetical(const char* character) {
+    return (*character >= 'a' && *character <= 'z') ? 1 : 0;
+}
+
+int isAlphabetical(const char* character) {
+    return isUpperAlphabetical(character) || isLowerAlphabetical(character);
+}
+
+int isLowerRange(const char* character, const char lower) {
+    return (*character < lower) ? 1 : 0;
+}
+
+int isUpperRange(const char* character, const char upper) {
+    return (*character > upper) ? 1 : 0;
+}
+
 void convert(char* string) {
 
-    int index = 0;
-    while (string[index] != '\0') {
+    for (int index = 0; string[index] != '\0'; index++) {
 
-        if (string[index] >= 'a' && string[index] <= 'z')string[index] -= ('a' - 'A');
-        else if (string[index] >= 'A' && string[index] <= 'Z') string[index] -= ('A' - 'a');
+        if (isLowerAlphabetical(&string[index])) string[index] -= ('a' - 'A');
+        else if (isUpperAlphabetical(&string[index])) string[index] -= ('A' - 'a');
 
-        index++;
     }
 
 }
 
-void code(enum CodeType codeType, char* string, signed char key) {
+void code(const enum CodeType codeType, char* string, signed char* key) {
 
     convert(string);
-    int index = 0;
-
     if (key < 0) key += 26;
 
-    while (string[index] != '\0') {
+    for (int index = 0; string[index] != '\0'; index++) {
 
-        if (string[index] >= 'A' && string[index] <= 'Z') {
+        if (isUpperAlphabetical(&string[index])) {
 
-            if (codeType == ENCODE) string[index] += key;
-            else string[index] -= key;
+            string[index] = codeType == ENCODE ? string[index] + *key : string[index] - *key;
 
-            if (string[index] > 'Z') string[index] -= 26;
-            else if (string[index] < 'A') string[index] += 26;
+            if (isUpperRange(&string[index], 'Z')) string[index] -= 26;
+            if (isLowerRange(&string[index], 'A')) string[index] += 26;
 
-        } else if (string[index] >= 'a' && string[index] <= 'z') {
+        } else if (isLowerAlphabetical(&string[index])) {
 
-            if (codeType == ENCODE) string[index] += key;
-            else string[index] -= key;
+            string[index] = codeType == ENCODE ? string[index] + *key : string[index] - *key;
 
-            if (string[index] > 'z') string[index] -= 26;
-            else if (string[index] < 'a') string[index] += 26;
+            if (isUpperRange(&string[index], 'z')) string[index] -= 26;
+            if (isLowerRange(&string[index], 'a')) string[index] += 26;
 
         }
 
-        index++;
-
     }
-
 
 }

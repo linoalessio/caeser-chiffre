@@ -37,33 +37,44 @@
  */
 int main(void) {
 
-    const unsigned int length = 100;
+    signed char key;
+    unsigned int codeType;
+
+    const unsigned int length = 1000;
     char sentence[length + 1];
 
-    printf("\nPlease enter a sentence: \n");
+    printf("\nPlease enter a sentence: ");
     scanf("%[^\n]c", sentence);
 
     sentence[length + 1] = '\0';
 
     if (strlen(sentence) > length + 1) {
-        printf("\nThe process was terminated since the sentence' length is too long!\n");
+        printf("\nThe process was terminated since the sentence' length is too long!");
         return 1;
     }
 
-    unsigned int codeType;
-    printf("\nPlease enter the code type whether your sentence should be encoded or decoded: (1. ENCODE, 2. DECODE)\n");
-    scanf("%u", &codeType);
+    printf("\nEnter the key and should your sentence be decoded or encoded? (1. ENCODE, 2. DECODE): ");
+    scanf("%d %d", &key, &codeType);
 
-    if (codeType != 1 && codeType != 2) {
-        printf("\nThe process was terminated since you chose the wrong coding type!\n");
+    if (key < -25 || key > 25) {
+        printf("\nThe process was terminated since the key is out of range!");
         return 1;
     }
 
-    code(codeType == 1 ? ENCODE : DECODE, sentence, -25);
+    if (codeType < 1 || codeType > 2) {
+        printf("\nThe process was terminated due to the wrong decode/encode type!");
+        return 1;
+    }
 
-    printf("\nYour sentence was successfully coded!");
-    printf("\nCoded sentence: %s", sentence);
+    const enum CodeType coding = codeType == 1 ? ENCODE : DECODE;
+    code(coding, sentence, &key);
 
+    if (coding == ENCODE) {
+        printf("\nEncoded sentence: %s\n", sentence);
+        return 0;
+    }
+
+    printf("\nDecoded sentence: %s\n", sentence);
 
     return 0;
 }
